@@ -15,15 +15,24 @@ const required = (val) => val && val.length;
             };
             this.toggleModal=this.toggleModal.bind(this)
             this.handleSubmit=this.handleSubmit.bind(this)
+            this.test=this.test.bind(this)
         }
         toggleModal(){
             this.setState({
               isModalOpen: !this.state.isModalOpen
             })
         }
+        test(){
+            console.log('clicked')
+            // this.props.addComment(this.props.dishId, document.getElementById('rating').value, document.getElementById('author').value, document.getElementById('comment').value);
+            // this.toggleModal();
+        }
         handleSubmit(values){
+            console.log('ok')
             console.log(JSON.stringify(values))
-            alert("The Current State is : "+JSON.stringify(values));
+            this.toggleModal();
+            // alert("The Current State is : "+JSON.stringify(values));
+            this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
             // event.preventDefault();
         }
         render(){
@@ -34,7 +43,9 @@ const required = (val) => val && val.length;
                 <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                 
                 <ModalBody>
-                    <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                    <LocalForm onSubmit={(values) => 
+                        
+                        this.handleSubmit(values)}>
                     <Row className="form-group">
                         <Label htmlFor="rating" md={2}>Rating</Label>
                         <Col md={10}>
@@ -52,9 +63,9 @@ const required = (val) => val && val.length;
                         <Label htmlFor="author" md={2}>Your Name</Label>
                         <Col md={10}>
                             <Control.text model=".author" id="author" name="author"
-                            placeholder="Your Name" className="form-control" validators={{
-                                required,maxLength:maxLength(15),minLength:minLength(3)
-                            }}/>
+                            placeholder="Your Name" className="form-control" 
+                            validators={{required,maxLength:maxLength(15),minLength:minLength(3)}}
+                            />
                             <Errors 
                             className="text-danger"
                             model=".author"
@@ -75,15 +86,16 @@ const required = (val) => val && val.length;
                                         className="form-control" />
                                 </Col>
                     </Row>
-                    </LocalForm>
-                </ModalBody>
-                <Row className="form-group">
+                    <Row className="form-group">
                     <Col md={{size:10, offset: 2}}>
-                        <Button type="submit" color="primary">
+                        <Button type="submit" color="primary" onClick={this.test}>
                             Submit
                         </Button>
                     </Col>
-                </Row>
+                    </Row>
+                    </LocalForm>
+                </ModalBody>
+                
             </Modal>
             </div>
             );
@@ -109,9 +121,10 @@ const required = (val) => val && val.length;
         }
     }
 
-    function RenderComments({comments}){
+    function RenderComments({comments,addComment,dishId}){
         if(comments!=null)
         {
+            console.log(dishId)
             const comm=comments.map((comment)=>{
                 const date=new Intl.DateTimeFormat('en-US', {
                     year: 'numeric',
@@ -131,7 +144,7 @@ const required = (val) => val && val.length;
                     <ul className="list-unstyled">
                     {comm}
                     </ul>
-                    <CommentForm />
+                    <CommentForm dishId={dishId} addComment={addComment}/>
                 </div>
             );
         }
@@ -162,7 +175,9 @@ const required = (val) => val && val.length;
                         <RenderDish dish={props.dish}/>
                         </div>
                         <div className="col-12 col-md-5 m-1">
-                        <RenderComments comments={props.comments}/>
+                        <RenderComments comments={props.comments} 
+                        addComment={props.addComment}
+                        dishId={props.dish.id}/>
                         </div>
                     </div>
                 </div>
