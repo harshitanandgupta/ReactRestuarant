@@ -5,6 +5,7 @@ import { Card, CardImg, CardText, CardBody,
 import { LocalForm,Control,Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import {FadeTransform,Fade,Stagger} from 'react-animation-components'
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
 const required = (val) => val && val.length;
@@ -34,7 +35,7 @@ const required = (val) => val && val.length;
             console.log(JSON.stringify(values))
             this.toggleModal();
             // alert("The Current State is : "+JSON.stringify(values));
-            this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+            this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
             // event.preventDefault();
         }
         render(){
@@ -107,6 +108,11 @@ const required = (val) => val && val.length;
    function  RenderDish({dish}){
         if(dish!==null && dish!==undefined){
           return (
+            <FadeTransform
+            in
+            transformProps={{
+                exitTransform: 'scale(0.5) translateY(-50%)'
+            }}>
             <Card>
               <CardImg width="100%" src={baseUrl+dish.image} alt={dish.name}/> 
               <CardBody>
@@ -114,6 +120,7 @@ const required = (val) => val && val.length;
                <CardText>{dish.description}</CardText>
               </CardBody>
             </Card>
+            </FadeTransform>
           );
         }
         else{
@@ -123,30 +130,31 @@ const required = (val) => val && val.length;
         }
     }
 
-    function RenderComments({comments,addComment,dishId}){
+    function RenderComments({comments,postComment,dishId}){
         if(comments!=null)
         {
             console.log(dishId)
-            const comm=comments.map((comment)=>{
-                const date=new Intl.DateTimeFormat('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: '2-digit'
-                }).format(new Date(comment.date))
-                return (
+            const comm=
+            
+            comments.map((comment)=>{
+                 return (
+                     <Fade in>
                     <li key={comment.id}>
                         <p>{comment.comment}</p>
-                        <p>--{comment.author},{date}</p>
+                        <p>--{comment.author},{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
                     </li>
+                    </Fade>
                 );
             })
             return (
                 <div>
                     <h4>Comments</h4>
                     <ul className="list-unstyled">
+                    <Stagger in>
                     {comm}
+                    </Stagger>
                     </ul>
-                    <CommentForm dishId={dishId} addComment={addComment}/>
+                    <CommentForm dishId={dishId} postComment={postComment}/>
                 </div>
             );
         }
@@ -197,7 +205,7 @@ const required = (val) => val && val.length;
                         </div>
                         <div className="col-12 col-md-5 m-1">
                         <RenderComments comments={props.comments} 
-                        addComment={props.addComment}
+                        postComment={props.postComment}
                         dishId={props.dish.id}/>
                         </div>
                     </div>

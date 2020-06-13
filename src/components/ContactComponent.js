@@ -11,71 +11,23 @@ const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val
 class Contact extends Component {
     constructor(props){
         super(props);
-        // this.state = {
-        //     firstname: '',
-        //     lastname: '',
-        //     telnum: '',
-        //     email: '',
-        //     agree: false,
-        //     contactType: 'Tel.',
-        //     message: '',
-        //     touched:{
-        //         firstname:false,
-        //         lastname:false,
-        //         telnum:false,
-        //         email:false
-        //     }
-        // };
-        // this.handleInputChange=this.handleInputChange.bind(this);
+       
         this.handleSubmit=this.handleSubmit.bind(this);
-        // this.handleBlur=this.handleBlur.bind(this);
+      
     }
-    // handleInputChange(event){
-    //     const target=event.target;
-    //     const value= target.type === 'checkbox' ? target.checked : target.value;
-    //     const name=target.name;
-    //     this.setState({
-    //         [name] : value
-    //     });
-    // }
+   
     handleSubmit(values){
         console.log(JSON.stringify(values))
-        alert("The Current State is : "+JSON.stringify(values));
+        // alert("The Current State is : "+JSON.stringify(values));
         this.props.resetFeedbackForm();
-        // event.preventDefault();
-    }
-    // handleBlur=(feild) => (evt) => {
-    //     this.setState({
-    //         touched : {...this.setState.touched,[feild]:true}
-    //     })
-    // }
-    // validate(firstname,lastname,telnum,email){
-    //     const errors = {
-    //         firstname:'',
-    //         lastname:'',
-    //         telnum:'',
-    //         email:''
-    //     }
-    //     if(this.state.touched.firstname && firstname.length < 3)
-    //     errors.firstname='First Name Should be of length >=3';
-    //     else if(this.state.touched.firstname && firstname.length > 10)
-    //     errors.firstname='First Name Should be of length <=10';
+        this.props.postFeedback(JSON.stringify(values));
         
-    //     if(this.state.touched.lastname && lastname.length < 3)
-    //     errors.lastname='Last Name Should be of length >=3';
-    //     else if(this.state.touched.lastname && lastname.length > 10)
-    //     errors.lastname='Last Name Should be of length <=10';
-
-    //     const reg=/^\d+$/;
-    //     if(this.state.touched.telnum && !reg.test(telnum))
-    //     errors.telnum='Phone Should only consist of numbers'
-
-    //     return errors;
-
-    // }
+    }
+    
+    
+    
     
     render(){
-        // const errors=this.validate(this.state.firstname,this.state.lastname,this.state.telnum,this.state.email);
         return(
             <div className="container">
                 <div className="row">
